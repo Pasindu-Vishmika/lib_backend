@@ -129,7 +129,7 @@ To change the database to PostgreSQL, follow these steps:
 - **Login:**
 
     ```sh
-    curl -X POST http://127.0.0.1:8000/api/login/ -H "Content-Type: application/json" -d '{"username": "root@root.com", "password": "1234"}'
+    curl -X POST http://127.0.0.1:8000/api/login/ -H "Content-Type: application/json" -d '{"username": "your email", "password": "your password"}'
     ```
 
 - **Get Books:**
