@@ -3,9 +3,9 @@ from . import views
 
 urlpatterns = [
     path('', views.getRoutes, name='routes'),
-    path("login/", views.login, name='login'),
-    path("logout/", views.logout, name='logout'),
-         
+    path('login/', views.login_view, name='login'), 
+    path('logout/', views.logout_view, name='logout'),  
+    
     path('add-book/', views.addNewBook, name='add-book'),
     path('book-list/', views.getBooks, name='book-list'),
     path('book/<str:pk>/', views.searchBook, name='book'),
@@ -18,6 +18,5 @@ urlpatterns = [
     path('member/<str:pk>/', views.searchMember, name='member'),
     path('update-member/<str:pk>/', views.updateMember, name='update-member'),
     path('delete-member/<str:pk>/', views.deleteMember, name='delete-member'),
-#path('send-notifications/', views.sendNotifications, name='send-notifications'),
     path('member-fine/', views.getMemberFine, name='member-fine'),
 ]

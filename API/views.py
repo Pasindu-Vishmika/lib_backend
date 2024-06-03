@@ -1,9 +1,10 @@
+from django.contrib.auth import authenticate, login , logout
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status, permissions
-from django.contrib.auth import authenticate, login , logout
-from .models import Book, Member, IssuedBook , Librarian
-from .serializer import BookSerializer, MemberSerializer, IssuedBookSerializer , LibrarianSerializer
+from .models import Book, Member, IssuedBook, Librarian
+from .serializer import BookSerializer, MemberSerializer, IssuedBookSerializer, LibrarianSerializer
 
 class IsLibrarian(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -27,6 +28,28 @@ def getRoutes(request):
         'sendNotifications': '/send-notifications/',
     }
     return Response(routes)
+
+@api_view(['POST'])
+def login_view(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+    
+    user = authenticate(username=username, password=password)
+    
+    if user is not None:
+        login(request, user)  # Correctly passing both request and user objects
+        if isinstance(user, Librarian):
+            serializer = LibrarianSerializer(user)
+        else:
+            serializer = MemberSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    else:
+        return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['POST'])
+def logout_view(request):
+    logout(request)
+    return Response({'detail': 'Successfully logged out.'}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @permission_classes([IsLibrarian])
@@ -167,7 +190,6 @@ def deleteMember(request, pk):
     member.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
-
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
 def getMemberFine(request):
@@ -176,48 +198,3 @@ def getMemberFine(request):
         return Response(status=status.HTTP_403_FORBIDDEN)
     
     return Response({'fine': member.fine}, status=status.HTTP_200_OK)
-
-"""
-@api_view(['POST'])
-@permission_classes([IsLibrarian])
-def sendNotifications(request):
-    message = request.data.get('message', 'This is a notification from the library.')
-    members = Member.objects.all()
-
-    for member in members:
-        notification = Notification.objects.create(
-            member=member,
-            message=message
-        )
-        notification.send_email()
-
-    return Response({'detail': 'Notifications sent to all members'}, status=status.HTTP_200_OK)"""
-
-@api_view(['POST'])
-def login_view(request):
-    username = request.data.get('username')
-    password = request.data.get('password')
-    
-    # Authenticate without passing the request object
-    user = authenticate(username=username, password=password)
-    
-    if user is not None:
-        login(request, user)  # Correctly passing both request and user objects
-        if isinstance(user, Librarian):
-            serializer = LibrarianSerializer(user)
-        else:
-            serializer = MemberSerializer(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    else:
-        return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-    
-@api_view(['POST'])
-def logout(request):
-    logout(request)
-    return Response({'detail': 'Successfully logged out.'}, status=status.HTTP_200_OK)
-
-def sendEmail(request):
-    pass
-
-def memberProfile(request):
-    pass
