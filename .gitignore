@@ -3,6 +3,7 @@
 *.pot
 *.pyc
 __pycache__/
+API/migrations/
 db.sqlite3
 
 
