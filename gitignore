@@ -5,37 +5,8 @@
 __pycache__/
 db.sqlite3
 
-# If you are using a different name for your SQLite file, include it here
+
 *.sqlite3
-
-# Media
-media
-
-
-# macOS
-.DS_Store
-
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# JetBrains
-.idea/
 
 # VS Code
 .vscode/
-
-# Python
-*.py[cod]
-*$py.class
-
-# Test reports
-.coverage
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-.hypothesis/
-.pytest_cache/
-
