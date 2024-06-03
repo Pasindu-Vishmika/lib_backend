@@ -194,11 +194,12 @@ def sendNotifications(request):
     return Response({'detail': 'Notifications sent to all members'}, status=status.HTTP_200_OK)"""
 
 @api_view(['POST'])
-def login(request):
+def login_view(request):
     username = request.data.get('username')
     password = request.data.get('password')
     
-    user = authenticate(request, username=username, password=password)
+    # Authenticate without passing the request object
+    user = authenticate(username=username, password=password)
     
     if user is not None:
         login(request, user)
@@ -211,7 +212,7 @@ def login(request):
         return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
     
 @api_view(['POST'])
-def logout_view(request):
+def logout(request):
     logout(request)
     return Response({'detail': 'Successfully logged out.'}, status=status.HTTP_200_OK)
 

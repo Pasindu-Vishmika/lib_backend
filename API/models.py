@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser , User
 from datetime import datetime, timedelta
 from django.core.mail import send_mail
 import re
