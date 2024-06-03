@@ -27,8 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-AUTH_USER_MODEL = 'API.Librarian'
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,9 +37,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    "API.apps.ApiConfig",
+    "API",
     "rest_framework",
     "corsheaders",
+]
+
+AUTH_USER_MODEL = 'API.Librarian'
+
+AUTHENTICATION_BACKENDS = [
+    'API.backends.MultiUserModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 MIDDLEWARE = [

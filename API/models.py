@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from datetime import datetime, timedelta
+from django.core.mail import send_mail
 import re
 
 class Librarian(AbstractUser):
@@ -8,7 +9,22 @@ class Librarian(AbstractUser):
     email = models.EmailField(max_length=200, unique=True)
     
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username']  # Adjust as needed
+
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='librarian_set',
+        blank=True,
+        help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.',
+        verbose_name='groups',
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='librarian_set',
+        blank=True,
+        help_text='Specific permissions for this user.',
+        verbose_name='user permissions',
+    )
 
 class Member(AbstractUser):
     first_name = models.CharField(max_length=200, null=True)
@@ -26,7 +42,22 @@ class Member(AbstractUser):
     status = models.BooleanField(default=True)
     
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username']  # Adjust as needed
+
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='member_set',
+        blank=True,
+        help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.',
+        verbose_name='groups',
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='member_set',
+        blank=True,
+        help_text='Specific permissions for this user.',
+        verbose_name='user permissions',
+    )
 
     def clean(self):
         # Validate NIC and extract birthday and gender
@@ -95,3 +126,4 @@ class IssuedBook(models.Model):
     def save(self, *args, **kwargs):
         self.calculate_fine()
         super().save(*args, **kwargs)
+
