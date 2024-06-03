@@ -202,7 +202,7 @@ def login_view(request):
     user = authenticate(username=username, password=password)
     
     if user is not None:
-        login(request, user)
+        login(request, user)  # Correctly passing both request and user objects
         if isinstance(user, Librarian):
             serializer = LibrarianSerializer(user)
         else:
